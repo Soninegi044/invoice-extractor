@@ -1,41 +1,113 @@
 import json
 import logging
+import base64
+import os
+from pathlib import Path
+from typing import Optional
+
+from dotenv import load_dotenv
 from nucliadb_sdk import NucliaDB
+
+load_dotenv()
 
 logger = logging.getLogger(__name__)
 
-def push_to_nuclia(document_id: str, extracted_data: dict):
-    try:
-        # 1. SDK Initialize (Warning fix: region="on-prem")
-        sdk = NucliaDB(region="on-prem", url="http://localhost:8080/api")
-        
-        text_content = json.dumps(extracted_data, ensure_ascii=False)
-        kb_slug = "invoice_kb"
-        
-        # 2. Knowledge Box (Database) check karein ya naya banayein
-        try:
-            kb = sdk.get_knowledge_box(slug=kb_slug)
-        except Exception:
-            kb = sdk.create_knowledge_box(slug=kb_slug)
-            
-        kbid = kb.uuid
-        if not kbid:
-            # Agar phir bhi ID na mile, toh list se pehla utha lein
-            kbs = sdk.list_knowledge_boxes()
-            if kbs:
-                kbid = kbs[0].uuid
-            else:
-                raise ValueError("Knowledge Box ID nahi mili!")
 
-        # 3. Data push karein
-        sdk.create_resource(
-            kbid=kbid,
-            texts={"text": {"body": text_content}},
-            slug=document_id
+def _resolve_knowledge_box_id(sdk, kb_slug: str) -> Optional[str]:
+    """
+    Gets the existing Knowledge Box ID from environment variables.
+    """
+    kbid = os.getenv("NUCLIADB_KBID")
+
+    if not kbid:
+        logger.error(
+            f"Knowledge Box ID not configured for '{kb_slug}'. "
+            "Set NUCLIADB_KBID in your .env file."
         )
-        
-        logger.info(f"Successfully pushed document {document_id} to Local NuDB (KB: {kbid}).")
+        return None
+
+    return kbid.strip()
+
+
+def push_to_nuclia(
+    document_id: str,
+    extracted_data: dict,
+    file_path: Optional[str] = None
+) -> bool:
+    """
+    Pushes extracted invoice data and an optional original file
+    to the local NucliaDB.
+    """
+
+    try:
+        sdk = NucliaDB(
+            region="on-prem",
+            url=os.getenv(
+                "NUCLIADB_URL",
+                "http://localhost:8080/api"
+            )
+        )
+
+        kb_slug = "invoice_kb"
+
+        kbid = _resolve_knowledge_box_id(sdk, kb_slug)
+
+        if not kbid:
+            return False
+
+        if not isinstance(extracted_data, dict):
+            logger.error("Extracted data must be a dictionary.")
+            return False
+
+        text_content = json.dumps(
+            extracted_data,
+            ensure_ascii=False
+        )
+
+        kwargs = {
+            "kbid": kbid,
+            "texts": {
+                "text": {
+                    "body": text_content
+                }
+            },
+            "slug": f"doc_{document_id}",
+            "title": f"Invoice {document_id}"
+        }
+
+        # Attach original invoice file
+        if file_path:
+            path = Path(file_path)
+
+            if not path.is_file():
+                logger.error(f"Invoice file not found: {file_path}")
+                return False
+
+            with path.open("rb") as f:
+                file_bytes = f.read()
+
+            kwargs["files"] = {
+                "file": {
+                    "file": {
+                        "filename": path.name,
+                        "payload": base64.b64encode(
+                            file_bytes
+                        ).decode("utf-8")
+                    }
+                }
+            }
+
+        # Upload resource to NucliaDB
+        response = sdk.create_resource(**kwargs)
+
+        logger.info(
+            f"Successfully pushed invoice to NucliaDB: {document_id}"
+        )
+
         return True
-    except Exception as e:
-        logger.error(f"Failed to push to NuDB: {e}")
+
+    except Exception:
+        logger.exception(
+            f"Failed to push document {document_id} to NucliaDB"
+        )
         return False

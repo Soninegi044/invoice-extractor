@@ -13,7 +13,6 @@ from app.services.vision.gemini import (
     extract_invoice_from_image,
     extract_invoice_from_pdf,
 )
-# 🔥 ChromaDB ki jagah NuDB import kiya hai
 from app.services.database.nuclia_db import push_to_nuclia
 
 logger = logging.getLogger(__name__)
@@ -38,7 +37,7 @@ def process_document(document_id: str) -> None:
         db.close()
         return
     finally:
-        db.close() # AI processing se pehle DB connection free kar do
+        db.close()
 
     # 🔥 STEP 2: AI Processing (Bina DB connection ke)
     ocr_conf: float | None = None
@@ -48,10 +47,25 @@ def process_document(document_id: str) -> None:
 
     try:
         if doc_type["type"] == "image":
-            _, ocr_conf = ocr_image_file(file_path)
-            mime = "image/png" if ext == ".png" else "image/jpeg"
-            with open(file_path, "rb") as f:
-                extracted, model_used = extract_invoice_from_image(f.read(), mime)
+            # --- GEMINI BYPASS START (Testing ke liye) ---
+            # _, ocr_conf = ocr_image_file(file_path)
+            # mime = "image/png" if ext == ".png" else "image/jpeg"
+            # with open(file_path, "rb") as f:
+            #     extracted, model_used = extract_invoice_from_image(f.read(), mime)
+
+            # Dummy data for nuDB testing
+            extracted = {
+                "invoice_details": {
+                    "invoice_number": "TEST-123",
+                    "invoice_date": "2026-11-18",
+                    "currency": "INR"
+                },
+                "supplier": {"name": "Test Supplier"},
+                "amounts": {"grand_total": 1500.0},
+                "line_items": [{"description": "Testing", "line_total": 1500.0}]
+            }
+            model_used = "dummy_test_model"
+            # --- GEMINI BYPASS END ---
 
         elif doc_type["type"] == "scanned_pdf":
             pages = ocr_pdf_pages(file_path)
@@ -115,7 +129,11 @@ def process_document(document_id: str) -> None:
     }
 
     # 🔥 NuDB (Nuclia) mein save karein
-    success = push_to_nuclia(document_id, data)
+    success = push_to_nuclia(
+        document_id=document_id, 
+        extracted_data=data, 
+        file_path=file_path
+    )
 
     # 🔥 STEP 3: Naya Connection kholo aur status update karke save karo
     db = SessionLocal()
