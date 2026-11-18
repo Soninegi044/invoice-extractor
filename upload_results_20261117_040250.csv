@@ -1,0 +1,60 @@
+Filename,Document_ID,Status,Error_Message
+images (1).jpg,7f818e9a-9024-42db-beb3-0ae3ed920fd2,SUCCESS,
+images (1).png,af8d48ad-67c3-4e96-8da5-64f1a6f28c3f,SUCCESS,
+images (10).jpg,84bf0166-d8f4-455f-93b1-01b35771a854,SUCCESS,
+images (10).png,9709d924-4235-4916-aa72-af7170991f39,SUCCESS,
+images (11).jpg,1b0d2cf9-2d7a-45bd-8e38-3e1ade2b893c,SUCCESS,
+images (11).png,66df53e9-ff1b-42c0-9090-302b7bb4ba2a,SUCCESS,
+images (12).jpg,af081ed3-656c-4679-b4ab-7819e57fe972,SUCCESS,
+images (12).png,910cbd78-a0a0-4719-b453-658e6b1d5732,SUCCESS,
+images (13).jpg,0426dace-46c9-4bde-aaa0-a07b886e54df,SUCCESS,
+images (13).png,6e7bb4bd-1328-420b-80c6-aa71a102ea03,SUCCESS,
+images (14).jpg,e5788fe9-7d0a-478d-8dca-18b6906eb482,SUCCESS,
+images (14).png,b04b067e-cf25-4e62-9cdc-b6be002b06de,SUCCESS,
+images (15).jpg,8c3c5211-c2d0-4f7d-a160-4e67173e85f9,SUCCESS,
+images (15).png,5a84b127-a207-4d5f-936c-ca7788340837,SUCCESS,
+images (16).jpg,N/A,FAILED,Internal Server Error
+images (16).png,48552bc8-a983-4761-8316-94dbd051fed4,SUCCESS,
+images (17).jpg,27fe1769-e6c0-461f-a8cf-a0585a137e68,SUCCESS,
+images (18).jpg,16ce1b2b-73c5-45aa-999a-3aaa6f4e2f29,SUCCESS,
+images (19).jpg,8987d5c5-2a97-4600-9a66-2a2fe236b3ef,SUCCESS,
+images (2).jpg,ab7b790d-460f-4601-8c50-2cee742ce556,SUCCESS,
+images (2).png,25c3da40-deae-4721-8318-054e4db16580,SUCCESS,
+images (20).jpg,067d79ae-e3a4-4095-b3f9-099f61020b37,SUCCESS,
+images (21).jpg,19430a3f-d000-4a73-a5c1-0441625767e7,SUCCESS,
+images (22).jpg,N/A,FAILED,Internal Server Error
+images (23).jpg,N/A,FAILED,Internal Server Error
+images (24).jpg,N/A,FAILED,Internal Server Error
+images (25).jpg,N/A,FAILED,Internal Server Error
+images (26).jpg,N/A,ERROR,"('Connection aborted.', ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None))"
+images (27).jpg,N/A,ERROR,"HTTPConnectionPool(host='127.0.0.1', port=8000): Max retries exceeded with url: /api/v1/invoices/upload (Caused by NewConnectionError(""HTTPConnection(host='127.0.0.1', port=8000): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it""))"
+images (28).jpg,N/A,ERROR,"HTTPConnectionPool(host='127.0.0.1', port=8000): Max retries exceeded with url: /api/v1/invoices/upload (Caused by NewConnectionError(""HTTPConnection(host='127.0.0.1', port=8000): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it""))"
+images (29).jpg,N/A,ERROR,"HTTPConnectionPool(host='127.0.0.1', port=8000): Max retries exceeded with url: /api/v1/invoices/upload (Caused by NewConnectionError(""HTTPConnection(host='127.0.0.1', port=8000): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it""))"
+images (3).jpg,N/A,ERROR,"HTTPConnectionPool(host='127.0.0.1', port=8000): Max retries exceeded with url: /api/v1/invoices/upload (Caused by NewConnectionError(""HTTPConnection(host='127.0.0.1', port=8000): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it""))"
+images (3).png,b5ea72b2-2dfa-4cc8-a414-061eadf4457f,SUCCESS,
+images (30).jpg,de7e3dae-385b-4afa-a1dd-caf364b731eb,SUCCESS,
+images (31).jpg,ddaf56c8-753f-4b22-a6b1-098de53a68ed,SUCCESS,
+images (32).jpg,b6ddc910-fcea-4f75-95e9-44154bb850db,SUCCESS,
+images (33).jpg,9a3912ef-083d-413d-bb11-6ff221be8f03,SUCCESS,
+images (34).jpg,6841ab08-9771-4f9d-bbff-cc9e1b70d82a,SUCCESS,
+images (4).jpg,55167158-f18a-43f8-8f07-bd5e10d3a3d5,SUCCESS,
+images (4).png,665c6c34-518f-420b-88bc-dbfbc61e141b,SUCCESS,
+images (5).jpg,228a3ab7-2313-4632-b2af-44bee5d382a4,SUCCESS,
+images (5).png,48fadb52-ef09-470f-a562-a89369f6770f,SUCCESS,
+images (6).jpg,60dc4efb-8584-4079-8fa3-7c95c4306d25,SUCCESS,
+images (6).png,e06109aa-91a8-47f2-a719-6f17ff3bc282,SUCCESS,
+images (7).jpg,c0eea406-249e-41cf-8128-5e06442733f4,SUCCESS,
+images (7).png,b1b4ab43-eac9-4747-9c50-dc369d083ef8,SUCCESS,
+images (8).jpg,92eaca59-765d-4917-b700-61fad45acaf5,SUCCESS,
+images (8).png,a51d323a-4fea-4178-bba3-ac4f9f15fd25,SUCCESS,
+images (9).jpg,68bbf613-fed3-4e39-a02e-279594a0ba93,SUCCESS,
+images (9).png,3fb2e670-9ce4-483c-a514-0f9f1eb6ba8d,SUCCESS,
+images.jpg,303a95f9-620e-45fa-8ec4-c6c3b7950af0,SUCCESS,
+images.png,b473f360-23a1-4d81-86f2-cd194ee872e1,SUCCESS,
+WhatsApp Image 2026-11-16 at 1.30.39 AM (1).jpeg,0d6489ff-fd82-4b5c-bc00-37fbbd0b4566,SUCCESS,
+WhatsApp Image 2026-11-16 at 1.30.39 AM (2).jpeg,59c2d547-93ed-4c6c-b747-3b87a9dd5a7a,SUCCESS,
+WhatsApp Image 2026-11-16 at 1.30.39 AM.jpeg,fb961f84-7c08-4ae2-bea2-68efc88c2d89,SUCCESS,
+WhatsApp Image 2026-11-16 at 1.30.40 AM (1).jpeg,43364f57-f00c-4623-a507-80c6a4c231b3,SUCCESS,
+WhatsApp Image 2026-11-16 at 1.30.40 AM.jpeg,84f053f0-d0a2-43c7-aaed-e37200b3d26c,SUCCESS,
+WhatsApp Image 2026-11-16 at 1.30.41 AM (1).jpeg,69c97252-3f26-44b3-be11-782f353d4561,SUCCESS,
+WhatsApp Image 2026-11-16 at 1.30.41 AM.jpeg,02a0aaa9-80a0-4fcb-b9d9-c73bcb1cbac8,SUCCESS,

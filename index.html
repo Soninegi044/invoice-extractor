@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Invoice Data Extractor</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; background-color: #f4f4f9; }
+        .container { background: white; padding: 30px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); max-width: 900px; margin: auto; }
+        h2 { color: #333; }
+        input[type="text"] { width: 65%; padding: 10px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 16px; }
+        button { padding: 10px 20px; background-color: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 16px; }
+        button:hover { background-color: #0056b3; }
+        .info-box { background: #f8f9fa; padding: 15px; border-radius: 5px; margin-bottom: 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .info-box p { margin: 5px 0; font-size: 16px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+        th { background-color: #007bff; color: white; }
+        tr:nth-child(even) { background-color: #f2f2f2; }
+        .error { color: red; margin-top: 15px; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>📄 AI Invoice Data Extractor</h2>
+        <p>Enter your Document ID (received after upload):</p>
+        <input type="text" id="docId" placeholder="e.g. b413eff9-a692-402f-b25e-a23f47878d1a">
+        <button onclick="fetchData()">Get Data</button>
+        
+        <div id="error" class="error"></div>
+        
+        <div id="result" style="display:none;">
+            <div class="info-box">
+                <p><strong>Invoice No:</strong> <span id="invNo"></span></p>
+                <p><strong>Grand Total:</strong> <span id="grandTotal"></span></p>
+                <p><strong>Supplier:</strong> <span id="supplier"></span></p>
+                <p><strong>Date:</strong> <span id="invDate"></span></p>
+            </div>
+            
+            <h3>Extracted Line Items</h3>
+            <table id="itemsTable">
+                <thead>
+                    <tr>
+                        <th>Description</th>
+                        <th>Qty & Unit</th>
+                        <th>Unit Price / Rate</th>
+                        <th>Tax</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        async function fetchData() {
+            const docId = document.getElementById('docId').value.trim();
+            const errorDiv = document.getElementById('error');
+            const resultDiv = document.getElementById('result');
+            
+            if(!docId) {
+                errorDiv.innerText = "Please enter a Document ID.";
+                return;
+            }
+
+            errorDiv.innerText = "Fetching data from server...";
+            resultDiv.style.display = 'none';
+
+            try {
+                const response = await fetch(`http://127.0.0.1:8000/api/v1/invoices/${docId}/extraction`);
+                
+                if (!response.ok) {
+                    const errData = await response.json();
+                    throw new Error(errData.detail || "Failed to fetch data. Document might be processing or failed.");
+                }
+
+                const res = await response.json();
+                const data = res.data; // Extracted JSON
+
+                // Fill invoice details
+                document.getElementById('invNo').innerText = data.invoice_details?.invoice_number || "N/A";
+                document.getElementById('grandTotal').innerText = data.amounts?.grand_total || "N/A";
+                document.getElementById('supplier').innerText = data.supplier?.name || "N/A";
+                document.getElementById('invDate').innerText = data.invoice_details?.invoice_date || "N/A";
+
+                const tbody = document.querySelector('#itemsTable tbody');
+                tbody.innerHTML = '';
+                
+                // Fill table rows
+                if (data.line_items && data.line_items.length > 0) {
+                    data.line_items.forEach(item => {
+                        const tr = document.createElement('tr');
+                        tr.innerHTML = `
+                            <td>${item.description || item.product_name || '-'}</td>
+                            <td>${item.quantity || '-'} ${item.unit || ''}</td>
+                            <td>${item.unit_price || item.rate || '-'}</td>
+                            <td>${item.tax_amount || '-'}</td>
+                            <td>${item.line_total || item.amount || item.total || '-'}</td>
+                        `;
+                        tbody.appendChild(tr);
+                    });
+                } else {
+                    tbody.innerHTML = '<tr><td colspan="5">No line items found in this document.</td></tr>';
+                }
+
+                errorDiv.innerText = "";
+                resultDiv.style.display = 'block';
+
+            } catch (err) {
+                errorDiv.innerText = `❌ Error: ${err.message}`;
+            }
+        }
+    </script>
+</body>
+</html>
